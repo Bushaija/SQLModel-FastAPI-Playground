@@ -1,0 +1,12 @@
+# Ignore Python cache directories
+__pycache__/
+
+# Ignore compiled Python files
+*.py[cod]
+
+# Ignore Python eggs and virtual environments
+*.egg-info/
+*.egg
+*.env
+.venv/
+database.db
