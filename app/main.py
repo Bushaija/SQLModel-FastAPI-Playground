@@ -2,7 +2,7 @@ import sqlmodel as sql
 from fastapi import FastAPI, Depends, Query, HTTPException
 
 from .database import create_db_tables, engine
-from .models import Hero, HeroCreate, HeroPublic, HeroUpdate
+from .models import Hero, HeroCreate, HeroPublic, HeroUpdate, Team, TeamPublic, TeamPublicWithHeroes, HeroPublicWithTeam
 
 # create an instance of fastapi
 app = FastAPI()
@@ -19,7 +19,7 @@ def get_session():
         yield session 
 
 # get one hero
-@app.get("heroes/{hero_id}", response_model=HeroPublic)
+@app.get("heroes/{hero_id}", response_model=HeroPublicWithTeam)
 def get_hero(*, hero_id: int, session: sql.Session = Depends(get_session)):
     hero = session.get(Hero, hero_id)
     if not hero:
@@ -99,6 +99,20 @@ def delete_hero(*, session: sql.Session = Depends(get_session), hero_id: int) ->
     session.delete(db_hero)
     session.commit()
     return {"ok": True}
+
+# Team routes
+
+# read a team
+@app.get("/teams/{team_id}", response_model=TeamPublicWithHeroes)
+def read_team(*, team_id: int, session: sql.Session = Depends(get_session)):
+    db_team = session.get(Team, team_id)
+    if not db_team:
+        raise HTTPException(
+            status_code=404,
+            detail="Not Found"
+        )
+    return db_team
+
 
 
 
