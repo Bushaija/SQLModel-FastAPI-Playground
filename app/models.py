@@ -20,6 +20,7 @@ class TeamUpdate(TeamBase):
     name: str|None = None
     headquarters: str|None = None 
 
+
 # Hero
 
 class HeroBase(sql.SQLModel):
@@ -45,5 +46,14 @@ class HeroUpdate(HeroBase):
     age: int|None = None
     password: str|None = None
     team_id: int|None = None
+
+
+# models with relationships
+
+class HeroPublicWithTeam(HeroPublic):
+    team: TeamPublic | None = None
+
+class TeamPublicWithHeroes(TeamPublic):
+    heroes: list[HeroPublic] = []
 
 
